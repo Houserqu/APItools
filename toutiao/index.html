@@ -8,12 +8,40 @@
     <title>Document</title>
 </head>
 <body>
-新闻头条
+<button id="getNews">获取最新新闻</button>
+<div id="news"></div>
 </body>
 <script src="jquery.js"></script>
 <script>
     $(document).ready(function () {
-        alert('good');
+        $('#getNews').on('click',function () {
+
+            $.ajax({
+                url:'http://toutiao-ali.juheapi.com/toutiao/index',     //请求的url
+                type:'get',                                             //请求的方式
+                headers:{
+                    'Authorization': 'APPCODE 557d3e7aaf744971bca3ed75c7c0421f' //设置请求头部,即认证信息
+                },
+                success:function (data) {   //请求成功执行的函数,data是获取的数据,在这个函数里处理数据
+
+                    console.log(data);  //在控制台输出数据,了解数据结构
+
+                    var news = data.result.data;    //发现新闻是存放在data.result.data里, 暂存到news变量里
+
+                    var html=''; //创建构建html代码的变量
+
+                    //遍历news数组,生成html代码
+                    news.forEach(function (item) {
+                        html+="<a href='"+item.url+"'>"+item.title+"</a><br />";
+                    });
+
+                    $('#news').append(html);//插入到div中
+                },
+                error:function () { //请求失败的时候执行的函数
+                    console.log('error');
+                }
+            });
+        });
     });
 </script>
 </html>
